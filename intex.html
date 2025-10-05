@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Te Amo!</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom right, #ffccd5, #ff8fa3); /* Fondo degradado rosado */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 6em;
+            color: #fff; /* Color blanco para el texto */
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+            margin: 0;
+            padding: 20px;
+            background-color: rgba(255, 105, 180, 0.6); /* Fondo semi-transparente para el texto */
+            border-radius: 20px;
+            letter-spacing: 5px;
+            animation: pulse 2s infinite alternate; /* Animación de pulsación */
+        }
+
+        @keyframes pulse {
+            from {
+                transform: scale(1);
+            }
+            to {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Estilos base para el corazón */
+        .heart {
+            position: absolute;
+            transform: rotate(-45deg);
+            animation: float 10s infinite ease-out;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        /* Animación para que suban */
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(-45deg);
+                opacity: 0;
+            }
+            25% {
+                opacity: 1;
+            }
+            75% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(-45deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Te Amo</h1>
+    </div>
+
+    <script>
+        const colors = ['#FF0000', '#FF69B4', '#DC143C', '#FFC0CB']; // Rojos y Rosas
+        const minSize = 20; // Tamaño mínimo del corazón
+        const maxSize = 40; // Tamaño máximo del corazón
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            document.body.appendChild(heart);
+
+            const size = Math.random() * (maxSize - minSize) + minSize; // Tamaño aleatorio
+            heart.style.width = size + 'px';
+            heart.style.height = size + 'px';
+
+            // Seleccionar color aleatorio
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            heart.style.backgroundColor = color;
+            heart.style.setProperty('--heart-color', color); // Para los pseudo-elementos
+
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 5 + 5 + 's';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+
+            // Ajustar el tamaño de los pseudo-elementos
+            heart.style.setProperty('--pseudo-element-size', size + 'px');
+            heart.style.setProperty('--pseudo-element-offset-top', (size / -2) + 'px');
+            heart.style.setProperty('--pseudo-element-offset-left', (size / 2) + 'px');
+
+            heart.style.backgroundColor = color; // Asigna el color al corazón principal
+            heart.querySelector(':scope::before').style.backgroundColor = color;
+            heart.querySelector(':scope::after').style.backgroundColor = color;
+
+
+            // Actualizar los estilos de los pseudo-elementos con el tamaño y color
+            heart.style.setProperty('--heart-color', color);
+            heart.style.setProperty('--heart-size', size + 'px');
+
+
+            // Ajuste de los pseudo-elementos para que se escalen con el tamaño del corazón
+            heart.style.setProperty('--before-top', (-size / 2) + 'px');
+            heart.style.setProperty('--after-left', (size / 2) + 'px');
+
+            setTimeout(() => {
+                heart.remove();
+            }, 10000); // Eliminar el corazón después de su animación
+        }
+        
+        // Estilos para los pseudo-elementos de los corazones, usando variables CSS
+        document.head.insertAdjacentHTML('beforeend', `
+            <style>
+                .heart::before,
+                .heart::after {
+                    width: var(--heart-size, 30px);
+                    height: var(--heart-size, 30px);
+                    background-color: var(--heart-color, #ff69b4);
+                }
+                .heart::before {
+                    top: var(--before-top, -15px);
+                    left: 0;
+                }
+                .heart::after {
+                    left: var(--after-left, 15px);
+                    top: 0;
+                }
+            </style>
+        `);
+
+
+        setInterval(createHeart, 80); // ¡Crear un corazón cada 80 milisegundos! (muchos más)
+    </script>
+</body>
+</html>
